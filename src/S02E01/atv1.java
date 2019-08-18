@@ -5,7 +5,7 @@
  */
 package S02E01;
 
-/**
+/*
  *
  * @author Lucas Amorim
  */
@@ -31,10 +31,8 @@ public class atv1 {
         System.out.println(i);
     }
     }*/
-    int base=1;
-    for (int i=1;i<=10;i++){
-        System.out.println(base*=i);
-    }
+        
+    
         
     }
 }
