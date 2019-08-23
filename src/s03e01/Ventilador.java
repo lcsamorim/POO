@@ -34,9 +34,14 @@ class Ventilador {
             }
         }
 	void aumentarVelocidade (){
+            if(velocidade>=0 && velocidade<3 && estaLigado){
+                velocidade+=1;
+            }
         }
 	void diminuirVelocidade (){
-        
+            if(velocidade>=0 && velocidade<3 && estaLigado){
+                velocidade-=1;
+            }
         }
 	
 	void showStatus() {
