@@ -8,10 +8,10 @@ package s03e02;
 import java.util.Scanner;
 
 class Peixe{
-    int barriga,maxBarriga;
+    int barriga=0,maxBarriga;
     
-    void alimentar(){
-        barriga++;
+    void alimentar(int qtd){
+        barriga+=qtd;
         if(barriga<=maxBarriga){
             System.out.println("Seu peixe foi alimentado");
         }
