@@ -42,6 +42,12 @@ public class Controller {
             this.fone = fone;
         }
 
+        @Override
+        public String toString() {
+            return "" + this.nome +": "+ this.fone;
+        }
+        
+
     }
     class Sala{
         int capacidade;
@@ -69,9 +75,6 @@ public class Controller {
 
         public void setCadeiras(ArrayList<Cliente> cadeiras) {
             this.cadeiras = cadeiras;
-        }
-        public String toString(){
-            return "" + this.capacidade + this.getCadeiras();
         }
     }
     public static void main(String[] args) {
