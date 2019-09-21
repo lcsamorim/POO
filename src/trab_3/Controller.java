@@ -1,4 +1,4 @@
-package s06e02;
+package trab_3;
 
 import java.util.ArrayList;
 
