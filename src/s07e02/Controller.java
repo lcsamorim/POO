@@ -30,7 +30,7 @@ class Pokemon{
 class PokemonAgua extends Pokemon{
     public PokemonAgua(String name){
         super(name + " of water");
-        
+        life +=10;
     }
     
     public void Atacar(){
