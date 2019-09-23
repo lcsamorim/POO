@@ -83,30 +83,57 @@ class Topic extends Passageiro {
         this.preferencial = preferencial;
     }
 
-
     public void embarcarPref(int pos, Passageiro passageiro) {
         for (Passageiro pass : cadeiras) {
-            if(pass == null){
+            if (pass == null) {
                 cadeiras.set(pos, passageiro);
                 return;
-            }pos+=1;
-            if(cadeiras.size()==pos && passcomum.size() == this.capacidade-this.preferencial){
-                System.out.println("Topic lotada");
+            }
+            pos += 1;
+            if (cadeiras.size() == pos) {
+                pos = 0;
+                if (pass != null) {
+                    for (Passageiro verif : passcomum) {
+                        if (verif == null) {
+                            passcomum.set(pos, passageiro);
+
+                            return;
+                        }
+                        pos += 1;
+                    }
+                }
+                if (cadeiras.size() == this.preferencial) {
+                    System.out.println("Topic lotada");
+                    return;
+                }
             }
         }
-        
-        
-        
+
     }
 
     public void embarcarNorm(int pos, Passageiro passageiro) {
         for (Passageiro pass : passcomum) {
-            if(pass == null){
+            if (pass == null) {
                 passcomum.set(pos, passageiro);
                 return;
-            }pos+=1;
-            if(passcomum.size()==pos){
-                System.out.println("Topic lotada");
+            }
+            pos += 1;
+            if (passcomum.size() == pos) {
+                pos = 0;
+                if (pass != null) {
+                    for (Passageiro verif : cadeiras) {
+                        if (verif == null) {
+                            cadeiras.set(pos, passageiro);
+                            return;
+                        }
+                        pos += 1;
+
+                    }
+                }
+                if (passcomum.size() == this.capacidade - this.preferencial) {
+                    System.out.println("Topic lotada");
+                    return;
+                }
             }
         }
     }
@@ -171,13 +198,13 @@ public class Controller {
                     System.out.println(topic);
                     break;
                 case "in":
-                    int aux=0;
+                    int aux = 0;
                     if (Integer.parseInt(vet[2]) >= 60) {
-                        topic.embarcarPref(aux,new Passageiro((vet[1]), Integer.parseInt(vet[2])));
-                        aux+=1;
+                        topic.embarcarPref(aux, new Passageiro((vet[1]), Integer.parseInt(vet[2])));
+                        aux += 1;
                     } else {
-                        topic.embarcarNorm(aux,new Passageiro((vet[1]), Integer.parseInt(vet[2])));
-                        aux+=1;
+                        topic.embarcarNorm(aux, new Passageiro((vet[1]), Integer.parseInt(vet[2])));
+                        aux += 1;
                     }
 
                     break;
