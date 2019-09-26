@@ -48,22 +48,22 @@ class Topic {
 
     int capacidade;
     int preferencial;
-    ArrayList<Passageiro> cadeiras;
-    ArrayList<Passageiro> passcomum;
+    ArrayList<Passageiro> cadeiraspreferenciais;
+    ArrayList<Passageiro> cadeirascomuns;
     ArrayList<Passageiro> totalcadeiras;
 
     public Topic(int capacidade, int preferencial) {
         this.capacidade = capacidade;
         this.preferencial = preferencial;
-        cadeiras = new ArrayList<Passageiro>();
-        passcomum = new ArrayList<Passageiro>();
+        cadeiraspreferenciais = new ArrayList<Passageiro>();
+        cadeirascomuns = new ArrayList<Passageiro>();
         totalcadeiras = new ArrayList<Passageiro>();
         for (int i = 1; i <= preferencial; i++) {
-            cadeiras.add(null);
+            cadeiraspreferenciais.add(null);
             totalcadeiras.add(null);
         }
         for (int i = 1; i <= capacidade - preferencial; i++) {
-            passcomum.add(null);
+            cadeirascomuns.add(null);
             totalcadeiras.add(null);
         }
 
@@ -97,45 +97,45 @@ class Topic {
             }
         }
         if (passageiro.getIdade() >= 60) {
-            for (Passageiro pass : cadeiras) {
+            for (Passageiro pass : cadeiraspreferenciais) {
                 if (pass == null) {
-                    cadeiras.set(pos, passageiro);
+                    cadeiraspreferenciais.set(pos, passageiro);
                     totalcadeiras.set(pos, passageiro);
                     return;
                 }
                 pos += 1;
-                if (cadeiras.size() == pos) {
+                if (cadeiraspreferenciais.size() == pos) {
                     pos = 0;
                     if (pass != null) {
-                        for (Passageiro verif : passcomum) {
+                        for (Passageiro verif : cadeirascomuns) {
                             if (verif == null) {
-                                passcomum.set(pos, passageiro);
+                                cadeirascomuns.set(pos, passageiro);
                                 totalcadeiras.set(pos, passageiro);
                                 return;
                             }
                             pos += 1;
                         }
                     }
-                    if (cadeiras.size() == this.preferencial) {
+                    if (cadeiraspreferenciais.size() == this.preferencial) {
                         System.out.println("Topic lotada");
                         return;
                     }
                 }
             }
         } else {
-            for (Passageiro pass : passcomum) {
+            for (Passageiro pass : cadeirascomuns) {
                 if (pass == null) {
-                    passcomum.set(pos, passageiro);
+                    cadeirascomuns.set(pos, passageiro);
                     totalcadeiras.set(pos, passageiro);
                     return;
                 }
                 pos += 1;
-                if (passcomum.size() == pos) {
+                if (cadeirascomuns.size() == pos) {
                     pos = 0;
                     if (pass != null) {
-                        for (Passageiro verif : cadeiras) {
+                        for (Passageiro verif : cadeiraspreferenciais) {
                             if (verif == null) {
-                                cadeiras.set(pos, passageiro);
+                                cadeiraspreferenciais.set(pos, passageiro);
                                 totalcadeiras.set(pos, passageiro);
                                 return;
                             }
@@ -143,7 +143,7 @@ class Topic {
 
                         }
                     }
-                    if (passcomum.size() == this.capacidade - this.preferencial) {
+                    if (cadeirascomuns.size() == this.capacidade - this.preferencial) {
                         System.out.println("Topic lotada");
                         return;
                     }
@@ -154,20 +154,20 @@ class Topic {
 
     public void remover(String id) {
 
-        for (int i = 0; i < this.cadeiras.size(); i++) {
-            Passageiro pass = this.cadeiras.get(i);
+        for (int i = 0; i < this.cadeiraspreferenciais.size(); i++) {
+            Passageiro pass = this.cadeiraspreferenciais.get(i);
             if (pass != null) {
                 if (pass.getId().equals(id)) {
-                    this.cadeiras.set(i, null);
+                    this.cadeiraspreferenciais.set(i, null);
                     return;
                 }
             }
         }
-        for (int i = 0; i < this.passcomum.size(); i++) {
-            Passageiro pass = this.passcomum.get(i);
+        for (int i = 0; i < this.cadeirascomuns.size(); i++) {
+            Passageiro pass = this.cadeirascomuns.get(i);
             if (pass != null) {
                 if (pass.getId().equals(id)) {
-                    this.passcomum.set(i, null);
+                    this.cadeirascomuns.set(i, null);
                     return;
                 }
             }
@@ -178,7 +178,7 @@ class Topic {
     @Override
     public String toString() {
         String out = "[ ";
-        for (Passageiro passageiro : this.cadeiras) {
+        for (Passageiro passageiro : this.cadeiraspreferenciais) {
             if (capacidade >= preferencial) {
                 if (passageiro != null) {
                     out += "@" + passageiro;
@@ -187,7 +187,7 @@ class Topic {
                 }
             }
         }
-        for (Passageiro passageiro : this.passcomum) {
+        for (Passageiro passageiro : this.cadeirascomuns) {
             if (capacidade >= preferencial) {
                 if (passageiro != null) {
                     out += "=" + passageiro;
