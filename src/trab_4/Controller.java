@@ -44,24 +44,29 @@ class Passageiro {
 
 }
 
-class Topic extends Passageiro {
+class Topic {
 
     int capacidade;
     int preferencial;
     ArrayList<Passageiro> cadeiras;
     ArrayList<Passageiro> passcomum;
+    ArrayList<Passageiro> totalcadeiras;
 
     public Topic(int capacidade, int preferencial) {
         this.capacidade = capacidade;
         this.preferencial = preferencial;
         cadeiras = new ArrayList<Passageiro>();
         passcomum = new ArrayList<Passageiro>();
+        totalcadeiras = new ArrayList<Passageiro>();
         for (int i = 1; i <= preferencial; i++) {
             cadeiras.add(null);
+            totalcadeiras.add(null);
         }
         for (int i = 1; i <= capacidade - preferencial; i++) {
             passcomum.add(null);
+            totalcadeiras.add(null);
         }
+
     }
 
     public Topic() {
@@ -83,75 +88,93 @@ class Topic extends Passageiro {
         this.preferencial = preferencial;
     }
 
-    public void embarcarPref(int pos, Passageiro passageiro) {
-        for (Passageiro pass : cadeiras) {
-            if (pass == null) {
-                cadeiras.set(pos, passageiro);
-                return;
-            }
-            pos += 1;
-            if (cadeiras.size() == pos) {
-                pos = 0;
-                if (pass != null) {
-                    for (Passageiro verif : passcomum) {
-                        if (verif == null) {
-                            passcomum.set(pos, passageiro);
+    public void embarcar(int pos, Passageiro passageiro) {
 
-                            return;
-                        }
-                        pos += 1;
-                    }
-                }
-                if (cadeiras.size() == this.preferencial) {
-                    System.out.println("Topic lotada");
-                    return;
-                }
+        for (Passageiro pass : totalcadeiras) {
+            if (pass != null && passageiro.getId().equals(pass.id)) {
+                System.out.println("Passageiro já está na topic");
+                return;
             }
         }
-
-    }
-
-    public void embarcarNorm(int pos, Passageiro passageiro) {
-        for (Passageiro pass : passcomum) {
-            if (pass == null) {
-                passcomum.set(pos, passageiro);
-                return;
-            }
-            pos += 1;
-            if (passcomum.size() == pos) {
-                pos = 0;
-                if (pass != null) {
-                    for (Passageiro verif : cadeiras) {
-                        if (verif == null) {
-                            cadeiras.set(pos, passageiro);
-                            return;
+        if (passageiro.getIdade() >= 60) {
+            for (Passageiro pass : cadeiras) {
+                if (pass == null) {
+                    cadeiras.set(pos, passageiro);
+                    totalcadeiras.set(pos, passageiro);
+                    return;
+                }
+                pos += 1;
+                if (cadeiras.size() == pos) {
+                    pos = 0;
+                    if (pass != null) {
+                        for (Passageiro verif : passcomum) {
+                            if (verif == null) {
+                                passcomum.set(pos, passageiro);
+                                totalcadeiras.set(pos, passageiro);
+                                return;
+                            }
+                            pos += 1;
                         }
-                        pos += 1;
-
+                    }
+                    if (cadeiras.size() == this.preferencial) {
+                        System.out.println("Topic lotada");
+                        return;
                     }
                 }
-                if (passcomum.size() == this.capacidade - this.preferencial) {
-                    System.out.println("Topic lotada");
+            }
+        } else {
+            for (Passageiro pass : passcomum) {
+                if (pass == null) {
+                    passcomum.set(pos, passageiro);
+                    totalcadeiras.set(pos, passageiro);
                     return;
+                }
+                pos += 1;
+                if (passcomum.size() == pos) {
+                    pos = 0;
+                    if (pass != null) {
+                        for (Passageiro verif : cadeiras) {
+                            if (verif == null) {
+                                cadeiras.set(pos, passageiro);
+                                totalcadeiras.set(pos, passageiro);
+                                return;
+                            }
+                            pos += 1;
+
+                        }
+                    }
+                    if (passcomum.size() == this.capacidade - this.preferencial) {
+                        System.out.println("Topic lotada");
+                        return;
+                    }
                 }
             }
         }
     }
 
     public void remover(String id) {
+        
         for (int i = 0; i < this.cadeiras.size(); i++) {
-            Passageiro passageiro = this.cadeiras.get(i);
-            if (passageiro != null && passageiro.getId().equals(id)) {
-                this.cadeiras.set(i, null);
+            Passageiro pass = this.cadeiras.get(i);
+            if (pass != null) {
+                if (pass.getId().equals(id)) {
+                    this.cadeiras.set(i, null);
+                    return;
+                }
             }
         }
         for (int i = 0; i < this.passcomum.size(); i++) {
-            Passageiro passageiro = this.passcomum.get(i);
-            if (passageiro != null && passageiro.getId().equals(id)) {
-                this.passcomum.set(i, null);
+            Passageiro pass = this.passcomum.get(i);
+            if (pass != null) {
+                if (pass.getId().equals(id)) {
+                    this.passcomum.set(i, null);
+                    return;
+                }
             }
         }
+        System.out.println("Passageiro não está na topic");
     }
+
 
     @Override
     public String toString() {
@@ -186,7 +209,6 @@ public class Controller {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         Topic topic = new Topic(0, 0);
-
         while (true) {
             String line = scan.nextLine();
             String vet[] = line.split(" ");
@@ -199,14 +221,8 @@ public class Controller {
                     break;
                 case "in":
                     int aux = 0;
-                    if (Integer.parseInt(vet[2]) >= 60) {
-                        topic.embarcarPref(aux, new Passageiro((vet[1]), Integer.parseInt(vet[2])));
-                        aux += 1;
-                    } else {
-                        topic.embarcarNorm(aux, new Passageiro((vet[1]), Integer.parseInt(vet[2])));
-                        aux += 1;
-                    }
-
+                    topic.embarcar(aux, new Passageiro((vet[1]), Integer.parseInt(vet[2])));
+                    aux += 1;
                     break;
                 case "out":
                     topic.remover(vet[1]);
