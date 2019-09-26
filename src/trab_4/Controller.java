@@ -153,7 +153,7 @@ class Topic {
     }
 
     public void remover(String id) {
-        
+
         for (int i = 0; i < this.cadeiras.size(); i++) {
             Passageiro pass = this.cadeiras.get(i);
             if (pass != null) {
@@ -174,7 +174,6 @@ class Topic {
         }
         System.out.println("Passageiro não está na topic");
     }
-
 
     @Override
     public String toString() {
