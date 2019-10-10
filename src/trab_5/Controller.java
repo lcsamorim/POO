@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package s09e01;
+package trab_5;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -48,7 +48,7 @@ class Agencia {
     public void deposito(int indice, double valor){
         for (Conta c : contas){
             if(indice == c.getId()){
-                c.setSaldo(valor);
+                c.setSaldo(c.getSaldo()+valor);
                 return;
             }
         }
@@ -205,16 +205,16 @@ public class Controller {
                     agencia.addCli(vet[1]);
                     break;
                 case "deposito":
-                    agencia.deposito(Integer.parseInt(vet[1]), Integer.parseInt(vet[2]));
+                    agencia.deposito(Integer.parseInt(vet[1]), Double.parseDouble(vet[2]));
                     break;
                 case "saque":
-                    agencia.saque(Integer.parseInt(vet[1]), Integer.parseInt(vet[2]));
+                    agencia.saque(Integer.parseInt(vet[1]), Double.parseDouble(vet[2]));
                     break;
                 case "show":
                     agencia.show();
                     break;
                 case "transf":
-                    agencia.transf(Integer.parseInt(vet[1]), Integer.parseInt(vet[2]), Integer.parseInt(vet[3]));
+                    agencia.transf(Integer.parseInt(vet[1]), Integer.parseInt(vet[2]), Double.parseDouble(vet[3]));
                     break;
                 case "update":
                     agencia.update();
