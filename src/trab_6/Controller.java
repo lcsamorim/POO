@@ -6,114 +6,97 @@
 package trab_6;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
+
+/**
+ *
+ * @author Lucas Amorim
+ */
+class Repositorio <T>{
+    Map<String, T> dados;
+    public Repositorio(){
+        dados = new TreeMap<String, T>();
+    }
+    public void add(String key, T data){
+        T t = dados.get(key);
+        if(t == null){
+            dados.put(key, data);
+        }else{
+            throw new RuntimeException(key + " já existe");
+        }
+    }
+    public void del(String key, T data){
+        T t = dados.get(key);
+        if(t == null){
+            dados.remove(key, data);
+        }
+        else{
+            throw new RuntimeException(key + " não existe");
+        }
+    }
+    public T get(String key){
+        T t = dados.get(key);
+        if(t == null){
+            throw new RuntimeException(key + " não encontrado");
+        }
+        return t;
+    }
+    public ArrayList<T> getAll(){
+        ArrayList<T> out = new ArrayList<T>();
+        for(String key : dados.keySet()){
+            out.add(dados.get(key));
+        }
+        return out;
+    }
+}
 class Escola{
-    protected ArrayList<Disciplina> disciplinas;
-    protected ArrayList<Aluno> alunos;
-    Escola(){
-        disciplinas = new ArrayList<Disciplina>();
-        alunos = new ArrayList<Aluno>();
-    }
-
-    public ArrayList<Disciplina> getDisciplinas() {
-        return disciplinas;
-    }
-
-    public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
-    }
-
-    public ArrayList<Aluno> getAlunos() {
-        return alunos;
-    }
-
-    public void setAlunos(ArrayList<Aluno> alunos) {
-        this.alunos = alunos;
-    }
-    public void addDisciplina(String nomeDisciplina){
-        for (Disciplina disc : disciplinas){
-            if(disc.equals(nomeDisciplina)){
-                System.out.println("Disciplina já existe");
-                return;
-            }
-        }
-        Disciplina disciplina = new Disciplina(nomeDisciplina);
-        //Aluno aluno = new Aluno(nomeDisciplina);
-        //this.alunos.add(aluno);
-        //disciplina.addDiscNoAluno(aluno);
-        this.disciplinas.add(disciplina);
-        
-    }
-    public void addAluno(String nomeAluno){
-        for (Aluno aluno : alunos){
-            if(aluno.equals(nomeAluno)){
-                System.out.println("Aluno já existe");
-                return;
-            }
-        }
-        Aluno aluno = new Aluno(nomeAluno);
-        // disciplina = new Disciplina(nomeAluno);
-        //this.disciplinas.add(disciplina);
-        //disciplina.addAlunoNaDisc(disciplina);
-        this.alunos.add(aluno);
+    Repositorio<Aluno> alunos;
+    Repositorio<Disciplina> disciplinas;
+    public Escola(){
+        alunos = new Repositorio<Aluno>();
+        disciplinas = new Repositorio<Disciplina>();
     }
 
     @Override
     public String toString() {
-        String out = "";
-        String out1="Alunos:\n";
-        int aux = 0;
-        String out2="\nDisciplinas:\n";
-        int aux2 = 0;
-        for(Aluno nomeAlunos : alunos){
-            if(alunos != null){
-                
-                for(int i=0; i < aux; i++){
-                    out1 += "\n";
-                    break;
-                }
-                out1 += nomeAlunos.getNome() + "[]";
-                aux+=1;
-            }
-        }
-        out+=out1;
-        for(Disciplina nomeDisciplinas : disciplinas){
-            if(disciplinas != null){
-                for(int i=0; i < aux2; i++){
-                    out2 += "\n";
-                    break;
-                }
-                out2 += nomeDisciplinas.getNomeDisciplina()+ "[]";
-                aux2+=1;
-            }
-        }
-        out+=out2;
-        return out;
-        
+        return "" + alunos.getAll();
     }
     
 }
-class Aluno extends Escola{
-    private String nome;
-    
-    Aluno(String nome){
-        this.nome = nome;
-        
+class Aluno{
+    private String id;
+    Repositorio<Disciplina> disciplinas;
+    public Aluno(String id){
+        this.id = id;
+        disciplinas = new Repositorio<Disciplina>();
     }
 
-    public String getNome() {
-        return nome;
+    public String getId() {
+        return id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        String out = id + "[ ";
+        for(Disciplina disc : disciplinas.getAll()){
+            out += disc + " ";
+        }
+        return out + " ]";
     }
     
 }
-class Disciplina extends Escola{
+class Disciplina{
     private String nomeDisciplina;
-    Disciplina(String nomeDisciplina){
+    Repositorio<Aluno> alunos;
+    public Disciplina(String nomeDisciplina){
         this.nomeDisciplina = nomeDisciplina;
+        alunos = new Repositorio<Aluno>();
     }
 
     public String getNomeDisciplina() {
@@ -124,13 +107,16 @@ class Disciplina extends Escola{
         this.nomeDisciplina = nomeDisciplina;
     }
 
-    public void addDiscNoAluno(Aluno aluno) {
-        this.alunos.add(aluno);
+    @Override
+    public String toString() {
+        /*String out = "[ ";
+        for (Aluno alu : alunos.getAll()){
+            out += alu + " ";
+        }*/
+        String out=nomeDisciplina;
+        return out;
     }
-
-    void addAlunoNaDisc(Disciplina disciplina) {
-        this.disciplinas.add(disciplina);
-    }
+    
 }
 public class Controller {
     public static void main(String[] args) {
@@ -138,27 +124,20 @@ public class Controller {
         Scanner scanner = new Scanner(System.in);
         while(true){
             String line = scanner.nextLine();
-            String[] vet = line.split(" ");
+            String vet[] = line.split(" ");
             switch(vet[0]){
                 case "nwalu":
-                    int aux = vet.length;
-                    for(int i=1; i<aux; i++){
-                        escola.addAluno(vet[i]);
-                    }
+                    escola.alunos.add(vet[1], new Aluno(vet[1]));
                     break;
                 case "nwdis":
-                    int aux2 = vet.length;
-                    for(int i=1; i<aux2; i++){
-                        escola.addDisciplina(vet[i]);
-                    }
+                    escola.disciplinas.add(vet[1], new Disciplina(vet[1]));
                     break;
-                case "show":
+                case "la":
                     System.out.println(escola);
                     break;
+                case "mat":
+                    escola.alunos.get(vet[1]).disciplinas.add(vet[2], new Disciplina(vet[2]));
             }
-            
         }
     }
-    
-    
 }
