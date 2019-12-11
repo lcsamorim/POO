@@ -69,7 +69,7 @@ class Whatsapp {
     Repositorio<Usuario> usuarios;
     Repositorio<Grupo> grupos;
     int aux = 0;
-
+    
     Whatsapp() {
         this.usuarios = new Repositorio<>();
         this.grupos = new Repositorio<>();
@@ -91,9 +91,15 @@ class Whatsapp {
     }
 
     public void zap(String nome, String nomeGrupo, String msg) {
+        
         usuarios.get(nome).grupos.get(nomeGrupo).mensagens.add(aux, new Mensagem(usuarios.get(nome), msg));
-        aux++;
-
+        usuarios.get(nome).grupos.get(nomeGrupo).notificacoes.add(aux, new Notificacao(grupos.get(nomeGrupo)));
+        //aux++;
+    }
+    public void ler(String nome, String nomeGrupo){
+        System.out.println(usuarios.get(nome).grupos.get(nomeGrupo).mensagens);
+        usuarios.get(nome).grupos.get(nomeGrupo).cont=0;
+        
     }
 
     public String toString() {
@@ -129,20 +135,30 @@ class Usuario {
         out += "]";
         return out;
     }
+    @Override
+    public String toString() {
+        String out = "[ ";
+        for (Grupo g : grupos.getAll()) {
+            out += g.getNomeGrupo() +"("+ g.cont +")";
+        }
+        out += " ]";
+        return out;
+    }
 }
 
 class Grupo {
-
+    int cont=0;
     String nomeGrupo;
     Repositorio<Usuario> usuarios;
     ArrayList<Mensagem> mensagens;
-
+    ArrayList<Notificacao> notificacoes;
     Grupo(String nomeGrupo, Usuario usuario) {
         this.nomeGrupo = nomeGrupo;
         this.usuarios = new Repositorio<>();
         this.usuarios.add(usuario.getNome(), usuario);
         usuario.grupos.add(nomeGrupo, this);
         this.mensagens = new ArrayList<>();
+        this.notificacoes = new ArrayList<>();
     }
 
     public String getNomeGrupo() {
@@ -153,7 +169,7 @@ class Grupo {
         usuarios.add(usuario.getNome(), usuario);
         usuario.grupos.add(nomeGrupo, this);
     }
-
+    
     @Override
     public String toString() {
         String out = "[ ";
@@ -190,7 +206,26 @@ class Mensagem {
         return out;
     }
 }
+class Notificacao {
 
+    Grupo grupo;
+    int contNaoLidas;
+
+    public Notificacao(Grupo grupo) {
+        this.grupo = grupo;
+    }
+
+    public Grupo getNomeGrupo() {
+        return grupo;
+    }
+
+    @Override
+    public String toString() {
+        String out;
+        out = "[" + grupo.getNomeGrupo() + ": " + contNaoLidas + "]";
+        return out;
+    }
+}
 public class Controller {
 
     public static void main(String[] args) {
@@ -227,11 +262,13 @@ public class Controller {
                         vet[3] += " " + vet[i];
                     }
                     whatsapp.zap(vet[1], vet[2], vet[3]);
+                    whatsapp.usuarios.get(vet[1]).grupos.get(vet[2]).cont+=1;
                     break;
                 case "ler":
-                    System.out.println(whatsapp.usuarios.get(vet[1]).grupos.get(vet[2]).mensagens);
+                    whatsapp.ler(vet[1], vet[2]);
                     break;
                 case "notify":
+                    System.out.println(whatsapp.usuarios.get(vet[1]));
                     break;
                 case "end":
                     System.exit(0);
